@@ -103,7 +103,13 @@ export const makeAsyncSelect = (SelectComponent: ComponentType<*>) =>
 			if (!loadOptions) return callback();
 			const loader = loadOptions(inputValue, callback);
 			if (loader && typeof loader.then === 'function') {
-				loader.then(callback, () => callback());
+				loader.then(
+					callback,
+					() => callback(),
+					() => {
+						/* if the promise rejects, ignore it */
+					},
+				);
 			}
 		};
 		handleInputChange = (newValue: string, actionMeta: InputActionMeta) => {
@@ -182,9 +188,7 @@ export const makeAsyncSelect = (SelectComponent: ComponentType<*>) =>
 					}}
 					options={options}
 					isLoading={isLoading}
-					onInputChange={
-						this.handleInputChange
-					}
+					onInputChange={this.handleInputChange}
 				/>
 			);
 		}
